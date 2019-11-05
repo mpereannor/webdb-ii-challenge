@@ -1,14 +1,16 @@
 const express = require('express');
 const helmet = require('helmet');
 
-//const carRouter = require('../router.js');
+const carRouter = require('./cars/cars-router');
 
 const server = express();
 
 server.use(helmet());
+server.use(express.json());
+server.use('/api/cars', carRouter);
 
+//test server
 
-//test server 
 server.get('/', (req, res) => {
     res.send(`<h1>server working</h1>`)
 })
