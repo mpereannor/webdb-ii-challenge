@@ -4,6 +4,7 @@ const db = require('../data/db-config');
 
 const router = express.Router();
 
+//READ data
 router.get('/', (req, res) => {
     db('cars')
     .then(car => { 
@@ -16,22 +17,32 @@ router.get('/', (req, res) => {
     });
 });
 
-/*
 
-router.get('/:id', (req, res) => {
-    const { id } = req.params;
-    db('cars')
-    .where({id})
-    .first()
-    .then(car => { 
-        res.json(car);
-    })
-    .catch(error => { 
-        res.status(500).json(error.message);
-    });
+//READ Data by Id
+router.get('/:id', async (req, res) => { 
+    try { 
+        const result = await db('cars')
+        .where({id: req.params.id});
+        res.status(200).json(result[0]);
+    }
+    catch (error) { 
+    res.status(500).json({ message: 'this went wrong: ' + error.message });
+    }
 });
-*/
-//insert new data 
+// router.get('/:id', (req, res) => {
+//     const { id } = req.params;
+//     db('cars')
+//     .where({id})
+//     .first()
+//     .then(car => { 
+//         res.json(car);
+//     })
+//     .catch(error => { 
+//         res.status(500).json(error.message);
+//     });
+// });
+
+//CREATE Data 
 router.post('/', (req, res) => {
     const carData =req.body;
     db('cars')
@@ -43,21 +54,5 @@ router.post('/', (req, res) => {
         res.status(500).json(`FAILED to store data :` + error.message)
     })
 })
-/*
-router.post('/', (req, res) => {
-    const fruitData = req.body;
-    db('fruits').insert(fruitData)
-    .then(ids => {
-      db('fruits').where({ id: ids[0] })
-      .then(newFruitEntry => {
-        res.status(201).json(newFruitEntry);
-      });
-    })
-    .catch (err => {
-      console.log('POST error', err);
-      res.status(500).json({ message: "Failed to store data" });
-    });
-  });
-*/
 
 module.exports = router; 
