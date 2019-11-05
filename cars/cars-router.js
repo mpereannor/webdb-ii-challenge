@@ -29,6 +29,8 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ message: 'this went wrong: ' + error.message });
     }
 });
+
+//Read data by id method 2 
 // router.get('/:id', (req, res) => {
 //     const { id } = req.params;
 //     db('cars')
@@ -55,4 +57,32 @@ router.post('/', (req, res) => {
     })
 })
 
+router.put('/:id', async (req, res) => {
+  const upCar = req.body;
+  db('cars')
+  .where({ id: req.params.id })
+  .update(upCar)
+  .then(updatedCarInfo => {
+    res.json(updatedCarInfo + ' records got changed!' );
+  })
+  .catch(error => {
+    res.status(500).json({ message: 'this went wrong: ' + error.message });
+  });
+})
+
+router.delete('/:id', async (req, res) => {
+
+  db('cars')
+  .where( {
+      id: req.params.id
+  })
+  .del()
+  .then(deletedCar => {
+      res.json(deletedCar + 'row got deleled!');
+  })
+  .catch(error => 
+    {
+    res.status(500).json('this went wrong: ' + error.message)
+    })
+})
 module.exports = router; 
